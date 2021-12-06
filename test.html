@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Test Suite</title>
+<link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.17.2.css">
+
+<body>
+    
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <script src="https://code.jquery.com/qunit/qunit-2.17.2.js"></script>
+
+    <script src="clickerspill.js"></script>
+
+</body>
+
+<script>
+    function updateView() { }
+
+    QUnit.module('doClick', function () {
+        QUnit.test('points n clickin', function (assert) {
+            model.points = 0
+            model.pointsPerClick = 1
+            doClick();
+            assert.equal(model.points, 1);
+            assert.equal(model.pointsPerClick, 1);
+            doClick();
+            doClick();
+            assert.equal(model.points, 3);
+            assert.equal(model.pointsPerClick, 1);
+
+            model.points = 13
+            model.pointsPerClick = 4
+            doClick();
+            assert.equal(model.points, 17, "13+4=17");
+            assert.equal(model.pointsPerClick, 4, "4ppc");
+        });
+    });
+
+    QUnit.module('submitScore', function () {
+        QUnit.test('pushing leaderBoard', function (assert) {
+            model.leaderBoard = []
+            model.points = 13
+            model.name = "test"
+            model.juksing = 1
+            model.pointsPerClick = 6
+            submitScore();
+            assert.equal(model.leaderBoard[0].points, 13);
+            assert.equal(model.leaderBoard[0].name, "test");
+            assert.equal(model.leaderBoard[0].juksing, 1);
+            assert.equal(model.leaderBoard[0].pointsPerClick, 6);
+
+        });
+    });
+
+    QUnit.module('buyUpgrade', function () {
+        QUnit.test('buying upgrades', function (assert) {
+            model.points = 13
+            model.pointsPerClick = 2
+            buyUpgrade(10);
+            assert.equal(model.points, 3);
+            assert.equal(model.pointsPerClick, 3);
+            buyUpgrade(10)
+            assert.equal(model.points, 3);
+            assert.equal(model.pointsPerClick, 3);
+        });
+    });
+
+    QUnit.module('buyHundred', function () {
+        QUnit.test('buying 10 upgrades', function (assert) {
+            model.points = 130
+            model.pointsPerClick = 34
+            buyHundred(100);
+            assert.equal(model.points, 30);
+            assert.equal(model.pointsPerClick, 44);
+        });
+    });
+
+    QUnit.module('cheat', function () {
+        QUnit.test('cheating', function (assert) {
+            model.points = 2
+            model.pointsPerClick = 1
+            cheat();
+            assert.equal(model.points, 20);
+            assert.equal(model.pointsPerClick, 10);
+            cheat();
+            assert.equal(model.points, 200);
+            assert.equal(model.pointsPerClick, 100);
+        });
+    });
+
+    QUnit.module('reset', function () {
+        QUnit.test('resetting game', function (assert) {
+            model.points = 130
+            model.pointsPerClick = 34
+            reset();
+            assert.equal(model.points, 0);
+            assert.equal(model.pointsPerClick, 1);
+        });
+    });
+
+    QUnit.module('scoreOutput', function () {
+        QUnit.test('filling leaderBoard', function (assert) {
+            output = ""
+            submitScore()
+            scoreOutput()
+            assert.equal(scoreOutput(), `<tr>` +
+                `<td>${model.leaderBoard[0].name}</td>` +
+                `<td style='text-align: right;'>${model.leaderBoard[0].points}</td>` +
+                `<td style='text-align: right;'>${model.leaderBoard[0].pointsPerClick}</td>` +
+                `<td style='text-align: right;'>${(model.leaderBoard[0].juksing == 0) ? 'Nei' : 'Juksepave!'}</td>` +
+                `</tr>`)
+
+        });
+    });
+
+    QUnit.module('getSmiley', function () {
+        QUnit.test('fetching smiley', function (assert) {
+            
+            assert.equal(getSmiley(0), "😀");
+            assert.equal(getSmiley(1), "😁");
+            assert.equal(getSmiley(2), "");
+            model.juksing = 1;
+            assert.equal(getSmiley(1), "😤");
+        });
+    });
+
+    QUnit.module('getNextSmileyIndex', function () {
+        QUnit.test('fetching next smiley', function (assert) {
+
+            assert.equal(getNextSmileyIndex(0), 1);
+            
+            assert.equal(getNextSmileyIndex(2), 0);
+        });
+    });
+</script>

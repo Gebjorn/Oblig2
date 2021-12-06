@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        div {
+            font-size: 300%;
+            user-select: none;
+        }
+
+        table,
+        th,
+        td,
+        tr {
+            border: solid black 2px;
+            border-collapse: collapse;
+            font-size: 15px;
+        }
+
+        th,
+        td {
+            padding: 0px 5px;
+        }
+    </style>
+    
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <script src="clickerspill.js"></script>
+
+
+    <script>
+
+        // view
+        updateView();
+        function updateView() {
+            var smiley = getSmiley(model.smileyIndex);
+            document.getElementById('app').innerHTML = `
+        <div id="image" onclick="doClick()">${smiley}</div>
+        <div id="model.pointsInfo">${model.points}</div>
+        <button onclick="buyUpgrade(10)">Kjøp oppgradering (10 poeng)</button>
+        <button onclick="buyHundred(100)">Kjøp 10 oppgraderinger (100 poeng)</button>
+        <button onclick="cheat()">Ikke juks i det hele tatt</button> </br>
+        <button onclick="reset()">Start på nytt</button> </br>
+        <input type="text" oninput="model.name=value" value="${model.name}" />
+        <button onclick="submitScore()">Lagre poengsum</button>
+        
+        <table>
+            <tr>
+            <th>Navn</th>
+            <th>Poeng</th>
+            <th>PoengPerKlikk</th>
+            <th>Juksepave?</th>
+            </tr>${scoreOutput()}
+
+            
+        </table>`
+        }
+
+    </script>
+</body>
+
+</html>
